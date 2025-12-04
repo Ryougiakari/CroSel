@@ -106,8 +106,11 @@ def main():
     label_matrix_all=copy.deepcopy(train_all_dataset.given_label_matrix)
     label_matrix_all=label_matrix_all.numpy()
 
-    with open(os.path.join("./result/", args.out +
-                                  '_training_results.csv'), 'w') as f:
+    result_dir = os.path.join('.', 'result')
+    os.makedirs(result_dir, exist_ok=True)
+    result_file = os.path.join(result_dir, args.out + '_training_results.csv')
+
+    with open(result_file, 'w') as f:
         f.write('epoch,time(s),train_loss,selected_ratio1(%),selcted_acc1(%),selected_ratio2(%),selcted_acc2(%),test_loss,test_acc(%)\n')
 
     selected_ratio1=0
@@ -152,8 +155,7 @@ def main():
         memory_bank2 = eval_train(model2, memory_bank2, train_all_loader, args)
         valloss,valacc  = test_double(args,test_loader,model1,model2)
 
-        with open(os.path.join("./result/", args.out +
-                                    '_training_results.csv'), 'a') as f:
+        with open(result_file, 'a') as f:
             f.write('%03d,%05d,%0.6f,%0.4f,%0.2f,%0.4f,%0.2f,%0.5f,%0.2f\n' % (
             (epoch + 1),
             time.time() - begin_epoch,
